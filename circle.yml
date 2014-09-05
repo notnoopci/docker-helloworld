@@ -3,9 +3,14 @@ machine:
     - docker
 
 dependencies:
+  cache_directories:
+    - "~/docker"
+
   override:
     - docker info
+    - if [[ -e ~/docker ]]; then docker load -i ~/docker/image.tar; fi
     - docker build -t circleci/elasticsearch .
+    - mkdir -p ~/docker; docker save circleci/elasticsearch > ~/docker/image.tar
 
 test:
   override:
